@@ -1,0 +1,26 @@
+# Entorno virtual
+.venv/
+env/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyInstaller / Build artifacts
+build/*
+!build/.gitkeep
+dist/
+*.spec
+
+# Datos y runtime del servidor (los saves reales no van al repo)
+server/data/*
+!server/data/.gitkeep
+
+# Configuración local de clientes (tokens y paths privados)
+client/config.json
+
+# IDEs
+.vscode/
+.idea/
