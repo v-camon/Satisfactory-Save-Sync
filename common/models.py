@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from typing import Optional, List
 
 
@@ -6,6 +6,19 @@ class LockStatus(BaseModel):
     is_locked: bool = Field(..., description="Indica si hay una sesión activa")
     locked_by: Optional[str] = Field(None, description="Nombre de usuario que posee el lock")
     locked_at: Optional[str] = Field(None, description="Timestamp ISO del momento de bloqueo")
+
+    @model_validator(mode="after")
+    def validate_lock_owner(self):
+        if self.is_locked:
+            if not self.locked_by or not self.locked_by.strip():
+                raise ValueError("Si is_locked es True, locked_by es estrictamente obligatorio.")
+            if not self.locked_at:
+                raise ValueError("Si is_locked es True, locked_at es estrictamente obligatorio.")
+        else:
+            # Si no está bloqueado, no debe tener dueño asociado
+            self.locked_by = None
+            self.locked_at = None
+        return self
 
 
 class LockRequest(BaseModel):
