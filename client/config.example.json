@@ -1,6 +1,15 @@
 {
-    "mode": "api",
-    "server_url": "http://tu-servidor-oci:puerto",
-    "user": "PlayerOne",
-    "token": "token_usuario_1"
+
+    "comment": "Usa 'api' para un servidor centralizado o 'p2p' para Syncthing en local",
+
+    "_ejemplo_server": {
+        "mode": "api",
+        "server_url": "SERVER",
+        "user": "NOMBRE",
+        "token": "TU_TOKEN_AQUI"
+    },
+    "_ejemplo_p2p": {
+        "mode": "p2p",
+        "user": "NOMBRE"
+    }
 }
