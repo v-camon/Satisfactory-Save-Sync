@@ -13,7 +13,7 @@
         "ghcr.io/parkervcp/yolks:python_3.12": "ghcr.io/parkervcp/yolks:python_3.12"
     },
     "file_denylist": [],
-    "startup": "if [ -f server/requirements.txt ]; then pip install --no-cache-dir -r server/requirements.txt; elif [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi; python3 -m uvicorn server.main:app --host 0.0.0.0 --port ${SERVER_PORT}",
+    "startup": "bash server/start.sh",
     "config": {
         "files": "{}",
         "startup": "{\r\n    \"done\": \"Application startup complete.\"\r\n}",
