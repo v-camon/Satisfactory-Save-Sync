@@ -1,3 +1,4 @@
+# server/config.py
 import json
 from pathlib import Path
 
@@ -15,23 +16,27 @@ BACKUPS_DIR.mkdir(parents=True, exist_ok=True)
 # Plantilla de settings si no existe
 if not SETTINGS_FILE.exists():
     SETTINGS_FILE.write_text(
-        json.dumps({
-            "allowed_prefix": "tacos_mecanicos_",
-            "max_backups_per_file": 10
-        }, indent=2),
-        encoding="utf-8"
+        json.dumps(
+            {"allowed_prefix": "tacos_mecanicos_", "max_backups_per_file": 10}, indent=2
+        ),
+        encoding="utf-8",
     )
 
-# Plantilla de users si no existe
+# Plantilla de users con placeholders neutros
 if not USERS_FILE.exists():
     USERS_FILE.write_text(
-        json.dumps({
-            "tokens": {
-                "token_user_demo": "MrDemo"
-            }
-        }, indent=2),
-        encoding="utf-8"
+        json.dumps(
+            {
+                "tokens": {
+                    "token_usuario_1": "PlayerOne",
+                    "token_usuario_2": "PlayerTwo",
+                }
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
     )
+
 
 def get_server_settings() -> dict:
     try:

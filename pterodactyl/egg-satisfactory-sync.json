@@ -1,0 +1,42 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-10-03T10:00:00Z",
+    "name": "Satisfactory Save Sync API",
+    "author": "support@pterodactyl.io",
+    "description": "FastAPI backend centralizado para sincronización y locking de saves de Satisfactory.",
+    "features": null,
+    "docker_images": {
+        "Python 3.12 (Generic)": "ghcr.io/parkervcp/yolks:python_3.12",
+        "Python 3.11 (Generic)": "ghcr.io/parkervcp/yolks:python_3.11"
+    },
+    "file_denylist": [],
+    "startup": "if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi; uvicorn server.main:app --host 0.0.0.0 --port ${SERVER_PORT}",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"Application startup complete.\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!/bin/bash\napt-get update\napt-get install -y git python3-pip curl\n\ncd /mnt/server\nif [ ! -d .git ]; then\n    git clone ${GIT_REPO_URL} .\nfi\n\npip install --no-cache-dir -r server/requirements.txt\necho \"Instalación completada.\"",
+            "container": "python:3.12-slim",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Git Repository URL",
+            "description": "URL del repositorio para clonar en la instalación inicial.",
+            "env_variable": "GIT_REPO_URL",
+            "default_value": "https://github.com/v-camon/Satisfactory-Save-Sync",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:255"
+        }
+    ]
+}
