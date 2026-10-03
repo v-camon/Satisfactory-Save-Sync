@@ -10,11 +10,10 @@
     "description": "FastAPI backend centralizado para sincronización y locking de saves de Satisfactory.",
     "features": null,
     "docker_images": {
-        "Python 3.12 (Generic)": "ghcr.io/parkervcp/yolks:python_3.12",
-        "Python 3.11 (Generic)": "ghcr.io/parkervcp/yolks:python_3.11"
+        "ghcr.io/parkervcp/yolks:python_3.12": "ghcr.io/parkervcp/yolks:python_3.12"
     },
     "file_denylist": [],
-    "startup": "if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi; uvicorn server.main:app --host 0.0.0.0 --port ${SERVER_PORT}",
+    "startup": "if [ -f server/requirements.txt ]; then pip install --no-cache-dir -r server/requirements.txt; elif [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi; python3 -m uvicorn server.main:app --host 0.0.0.0 --port ${SERVER_PORT}",
     "config": {
         "files": "{}",
         "startup": "{\r\n    \"done\": \"Application startup complete.\"\r\n}",
@@ -23,20 +22,21 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!/bin/bash\napt-get update\napt-get install -y git python3-pip curl\n\ncd /mnt/server\nif [ ! -d .git ]; then\n    git clone ${GIT_REPO_URL} .\nfi\n\npip install --no-cache-dir -r server/requirements.txt\necho \"Instalación completada.\"",
-            "container": "python:3.12-slim",
+            "script": "#!/bin/bash\napt-get update\napt-get install -y git python3-pip curl\n\ncd /mnt/server\nif [ ! -d .git ]; then\n    git clone ${GIT_REPO_URL} .\nelse\n    git pull origin main\nfi\n\nif [ -f server/requirements.txt ]; then\n    pip install --no-cache-dir -r server/requirements.txt\nfi\necho \"Instalación completada.\"",
+            "container": "ghcr.io/parkervcp/installers:debian",
             "entrypoint": "bash"
         }
     },
     "variables": [
         {
             "name": "Git Repository URL",
-            "description": "URL del repositorio para clonar en la instalación inicial.",
+            "description": "URL del repositorio git a clonar.",
             "env_variable": "GIT_REPO_URL",
-            "default_value": "https://github.com/v-camon/Satisfactory-Save-Sync",
+            "default_value": "https://github.com/v-camon/Satisfactory-Save-Sync.git",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:255"
+            "rules": "required|string|max:255",
+            "field_type": "text"
         }
     ]
 }
