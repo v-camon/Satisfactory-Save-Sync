@@ -1,0 +1,6 @@
+{
+    "mode": "api",
+    "server_url": "http://tu-servidor-oci:puerto",
+    "user": "PlayerOne",
+    "token": "token_usuario_1"
+}
