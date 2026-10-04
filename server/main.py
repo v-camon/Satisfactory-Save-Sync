@@ -8,6 +8,7 @@ from typing import Optional
 
 from fastapi import FastAPI, Header, HTTPException, UploadFile, File, status, Depends
 from fastapi.responses import FileResponse
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
 from common.models import (
     LockStatus,
@@ -33,6 +34,25 @@ app = FastAPI(
     redoc_url="/redoc" if IS_DEV else None,
     openapi_url="/openapi.json" if IS_DEV else None,
 )
+
+# Permitir únicamente tu dominio dinámico, localhost para pruebas locales, 
+# y la IP de la máquina si alguna vez llamas directo por IP.
+ALLOWED_HOSTS = [
+    "latormenta.mooo.com",
+    "*.mooo.com",
+    "localhost",
+    "127.0.0.1",
+    "testserver",  # Necesario para que los tests con TestClient sigan pasando
+]
+
+# Si necesitas permitir la IP pública directa sin dominio, añade tu IP a la lista:
+# ALLOWED_HOSTS.append("TU_IP_PUBLICA_OCI")
+
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=ALLOWED_HOSTS
+)
+
 
 current_lock = LockStatus(is_locked=False)
 
