@@ -1,6 +1,7 @@
 import json
 import shutil
 import tempfile
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -19,7 +20,19 @@ from server.config import CURRENT_SAVES_DIR, LOCK_FILE, USERS_FILE
 from server.config import get_server_settings
 from server.storage import get_manifest, save_uploaded_file
 
-app = FastAPI(title="Satisfactory Sync Server", version="1.0.0")
+
+# Determinar si estamos en entorno de producción o desarrollo
+# Si ENVIRONMENT no está definido o es 'production', ocultamos la documentación interactiva
+IS_DEV = os.getenv("ENVIRONMENT", "production").lower() in ("development", "dev", "local")
+
+app = FastAPI(
+    title="Satisfactory Save Sync Server",
+    description="Centralized synchronization backend with atomic locking for Satisfactory saves",
+    version="1.0.1",
+    docs_url="/docs" if IS_DEV else None,
+    redoc_url="/redoc" if IS_DEV else None,
+    openapi_url="/openapi.json" if IS_DEV else None,
+)
 
 current_lock = LockStatus(is_locked=False)
 
